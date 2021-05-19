@@ -1,5 +1,5 @@
-require 'tappay/request/pay'
-require 'tappay/response/cancel'
+require 'jko_pay/request/pay'
+require 'jko_pay/response/cancel'
 
 module JkoPay
   module Request

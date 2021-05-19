@@ -1,5 +1,5 @@
-require 'tappay/request/base'
-require 'tappay/response/refund'
+require 'jko_pay/request/base'
+require 'jko_pay/response/refund'
 
 module JkoPay
   module Request
