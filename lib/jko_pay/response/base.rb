@@ -11,47 +11,7 @@ module JkoPay
       end
 
       def success?
-        status == '000'
-      end
-
-      def merchant_id
-        @MerchantID
-      end
-
-      def store_id
-        @StoreID
-      end
-
-      def merchant_trade_number
-        @MerchantTradeNo
-      end
-
-      def pos_id
-        @PosID
-      end
-
-      def status
-        @StatusCode
-      end
-
-      def message
-        @StatusDesc
-      end
-
-      def extra_info1
-        @Extra1
-      end
-
-      def extra_info2
-        @Extra2
-      end
-
-      def credit_card_info
-        @Extra3
-      end
-
-      def note
-        @Remark
+        raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
       end
 
     end

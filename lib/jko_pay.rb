@@ -8,11 +8,4 @@ require "jko_pay/response"
 module JkoPay
   class Error < StandardError; end
 
-  def self.configure
-    yield config
-  end
-
-  def self.config
-    @config ||= Config.new
-  end
 end
