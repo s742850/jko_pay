@@ -40,6 +40,10 @@ module JkoPay
           redeem_name && redeem_name != ""
         end
 
+        def is_credit_card_payment?
+          payment_type == 4
+        end
+
         def redeem_name
           @RedeemName
         end
