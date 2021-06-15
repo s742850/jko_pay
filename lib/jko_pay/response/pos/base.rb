@@ -10,6 +10,10 @@ module JkoPay
           status == '000'
         end
 
+        def need_cancel?
+          status == '801'
+        end
+
         def merchant_id
           @MerchantID
         end

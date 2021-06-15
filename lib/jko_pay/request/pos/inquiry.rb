@@ -20,6 +20,7 @@ module JkoPay
         def to_hash
           hash = super
           hash[:InquiryType] = query_type
+          hash.delete :StoreName
           hash
         end
 

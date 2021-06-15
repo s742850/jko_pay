@@ -2,7 +2,7 @@
 require 'net/https'
 require 'json'
 require 'digest'
-
+require 'openssl'
 require 'jko_pay/request/base'
 
 module JkoPay

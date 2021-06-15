@@ -20,6 +20,10 @@ module JkoPay
           hash = super
           hash[:TradeNo] = @trade_number
           hash[:TradeAmount] = @amount
+          hash[:Remark] = ""
+          hash[:Extra1] = ""
+          hash[:Extra2] = ""
+          hash[:Extra3] = ""
           hash
         end
 

@@ -25,6 +25,10 @@ module JkoPay
           hash[:CardToken] = @card_token
           hash[:TradeAmount] = @amount
           hash[:UnRedeem] = @un_redeem_amount
+          hash[:Remark] = ""
+          hash[:Extra1] = ""
+          hash[:Extra2] = ""
+          hash[:Extra3] = ""
           hash
         end
 

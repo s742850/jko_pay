@@ -50,6 +50,7 @@ module JkoPay
             MerchantTradeNo: @merchant_trade_number,
             PosID: @pos_id,
             PosTradeTime: @pos_trade_time,
+            GatewayTradeNo: "",
           }
           hash
         end
@@ -70,8 +71,8 @@ module JkoPay
           uri = URI("#{request_host}/#{path}")
           req = Net::HTTP::Post.new(uri)
           req['Content-Type'] = 'application/json'
-          body = JSON.dump(sign_params)
-          req.body = body
+          body = sign_params
+          req.body = JSON.dump(body.sort.to_h)
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
             http.request(req)
           }
@@ -82,8 +83,11 @@ module JkoPay
             MerchantID: @config.merchant_id,
             SendTime: Time.current.strftime("%Y%m%d%H%M%S"),
             **to_hash,
-          }
-          params["Sign"] = Digest::SHA1.hexdigest("#{params.to_json}#{@config.merchant_key}")
+          }.as_json
+
+          data_string = params.sort.to_h.to_json
+          data_string += @config.merchant_key
+          params["Sign"] = Digest::SHA256.hexdigest(data_string).upcase
           params
         end
 
