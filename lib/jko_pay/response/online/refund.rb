@@ -1,4 +1,4 @@
-require 'jko_pay/response/Online/base'
+require 'jko_pay/response/online/base'
 
 module JkoPay
   module Response
