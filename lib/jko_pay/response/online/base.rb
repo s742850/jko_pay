@@ -7,10 +7,10 @@ module JkoPay
       class Base < ::JkoPay::Response::Base
 
         def success?
-          result == '000'
+          status == '000'
         end
 
-        def result
+        def status
           @result
         end
 

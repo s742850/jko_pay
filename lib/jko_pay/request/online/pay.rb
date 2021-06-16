@@ -6,18 +6,17 @@ module JkoPay
     module Online
       class Pay < Base
 
-        def card_token= token
-          @card_token = token
-        end
-
         def amount= amount
           @amount = amount.to_i
         end
 
-        def confirm_url= confirm_url
-          @confirm_url = confirm_url.to_s
+        def result_url= result_url
+          @result_url = result_url&.to_s
         end
 
+        def result_display_url= result_display_url
+          @result_display_url = result_display_url&.to_s
+        end
 
         private
 
@@ -26,7 +25,8 @@ module JkoPay
           hash[:currency] = "TWD"
           hash[:total_price] = @amount
           hash[:final_price] = @amount
-          hash[:result_display_url] = @confirm_url
+          hash[:result_display_url] = @result_display_url
+          hash[:result_url] = @result_url if @result_url
           hash
         end
 
