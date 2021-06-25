@@ -49,7 +49,7 @@ module JkoPay
           uri = URI("#{request_host}/#{path}")
           req = Net::HTTP::Post.new(uri)
           req['Content-Type'] = 'application/json'
-          req['X-API-KEY'] = @config.merchant_key
+          req['API-KEY'] = @config.merchant_key
           params = {
             store_id: @config.merchant_id,
             **to_hash,
