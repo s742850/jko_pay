@@ -25,7 +25,7 @@ module JkoPay
           hash[:currency] = "TWD"
           hash[:total_price] = @amount
           hash[:final_price] = @amount
-          hash[:result_display_url] = @result_display_url
+          hash[:result_display_url] = @result_display_url if @result_display_url
           hash[:result_url] = @result_url if @result_url
           hash
         end
