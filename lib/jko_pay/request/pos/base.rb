@@ -11,6 +11,7 @@ module JkoPay
       class Base < ::JkoPay::Request::Base
         PRODUCTION_HOST = 'https://uat-pos.jkopay.app'
         SANDBOX_HOST = 'https://uat-pos.jkopay.app/Test'
+        attr_accessor :request_raw, :response_raw
 
         def store_id= store_id
           @store_id = store_id.to_s
@@ -38,6 +39,7 @@ module JkoPay
 
         def request
           res = send_request request_action
+          response_raw = res.body
           response_klass.new(JSON.parse(res.body), res)
         end
 
@@ -72,7 +74,7 @@ module JkoPay
           req = Net::HTTP::Post.new(uri)
           req['Content-Type'] = 'application/json'
           body = sign_params
-          req.body = JSON.dump(body.sort.to_h)
+          req.body = request_raw = JSON.dump(body.sort.to_h)
           Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
             http.request(req)
           }
