@@ -4,6 +4,9 @@ module JkoPay
   module Response
     module Pos
       class Pay < Base
+
+        attr_accessor :transaction_id
+
         def gateway_trade_number
           @GateWayTradeNo
         end
