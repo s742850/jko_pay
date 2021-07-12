@@ -1,5 +1,5 @@
 require 'jko_pay/request/online/base'
-require 'jko_pay/response/online/Refund'
+require 'jko_pay/response/online/refund'
 
 module JkoPay
   module Request
