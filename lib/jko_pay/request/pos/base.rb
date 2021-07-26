@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'net/https'
+require 'faraday'
 require 'json'
 require 'digest'
 
@@ -9,8 +9,7 @@ module JkoPay
   module Request
     module Pos
       class Base < ::JkoPay::Request::Base
-        PRODUCTION_HOST = 'https://uat-pos.jkopay.app'
-        SANDBOX_HOST = 'https://uat-pos.jkopay.app/Test'
+
         attr_accessor :request_raw, :response_raw
 
         def store_id= store_id
@@ -57,10 +56,6 @@ module JkoPay
           hash
         end
 
-        def request_host
-          @config.production? ? PRODUCTION_HOST : SANDBOX_HOST
-        end
-
         def request_action
           raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
         end
@@ -70,25 +65,22 @@ module JkoPay
         end
 
         def send_request path
-          uri = URI("#{request_host}/#{path}")
-          req = Net::HTTP::Post.new(uri)
-          req['Content-Type'] = 'application/json'
+          raise JkoPay::Error, "Api host url is not presence" unless request_host.present?
+          raise JkoPay::Error, "Missing Merchant Key" unless config.merchant_key.present?
           body = sign_params
-          req.body = @request_raw = JSON.dump(body.sort.to_h)
-          Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
-            http.request(req)
-          }
+          @request_raw = JSON.dump(body.sort.to_h)
+          Faraday.post("#{request_host}/#{path}", @request_raw, {"Content-Type" => "application/json"})
         end
 
         def sign_params
           params = {
-            MerchantID: @config.merchant_id,
+            MerchantID: config.merchant_id,
             SendTime: Time.current.strftime("%Y%m%d%H%M%S"),
             **to_hash,
           }.as_json
 
           data_string = params.sort.to_h.to_json
-          data_string += @config.merchant_key
+          data_string += config.merchant_key
           params["Sign"] = Digest::SHA256.hexdigest(data_string).upcase
           params
         end

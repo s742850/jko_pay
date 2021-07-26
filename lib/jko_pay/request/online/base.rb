@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'net/https'
+require 'faraday'
 require 'json'
 require 'digest'
 require 'openssl'
@@ -9,7 +9,6 @@ module JkoPay
   module Request
     module Online
       class Base < ::JkoPay::Request::Base
-        HOST = 'https://uat-onlinepay.jkopay.app/platform'
 
         def store_id= store_id
           @store_id = store_id.to_s
@@ -33,10 +32,6 @@ module JkoPay
           hash
         end
 
-        def request_host
-          HOST
-        end
-
         def request_action
           raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
         end
@@ -46,19 +41,19 @@ module JkoPay
         end
 
         def send_request path
-          uri = URI("#{request_host}/#{path}")
-          req = Net::HTTP::Post.new(uri)
-          req['Content-Type'] = 'application/json'
-          req['API-KEY'] = @config.merchant_key
+          raise JkoPay::Error, "Api host url is not presence" unless request_host.present?
+          raise JkoPay::Error, "Missing Merchant Key" unless config.merchant_key.present?
           params = {
             store_id: @config.merchant_id,
             **to_hash,
           }
-          req['DIGEST'] = sign_params params
-          req.body = JSON.dump(params)
-          Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http|
-            http.request(req)
+          headers = {
+            "Content-Type" => "application/json",
+            "API-KEY" => config.merchant_key,
+            "DIGEST" => sign_params(params),
           }
+          body = JSON.dump(params)
+          Faraday.post("#{request_host}/#{path}", body, headers)
         end
 
         def sign_params params
